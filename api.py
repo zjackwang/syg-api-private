@@ -19,10 +19,10 @@ api = Api(app)
 ##
 
 def abort_invalid_json():
-    abort(403, message="Submitted json does not fit required format.") 
+    abort(403, message="Submitted json does not fit required format") 
 
 def abort_invalid_hmac_signature():
-    abort(403, message="Received HMAC signature could not be verified.")
+    abort(403, message="Received HMAC signature could not be verified")
 
 
 ##
