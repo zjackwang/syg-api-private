@@ -39,7 +39,7 @@ user_updated_generic_item_set = syg_data["UserUpdatedGenericItemSet"]
 Input: Dict generic item format 
 Output: Bool result of insert call 
 """
-def insert_generic_item(generic_item: MongoObject) -> bool:
+def insert_generic_item(generic_item: MongoObject):
     result = user_submitted_generic_item_set.insert_one(generic_item)
     return result 
 
@@ -50,7 +50,7 @@ def insert_generic_item(generic_item: MongoObject) -> bool:
 Input: Dict matched item format 
 Output: Bool result of insert call 
 """
-def insert_matched_item(matched_item: MongoObject) -> bool:
+def insert_matched_item(matched_item: MongoObject):
     result = user_submitted_matched_item_dict.insert_one(matched_item)
     return result 
 
@@ -61,6 +61,6 @@ def insert_matched_item(matched_item: MongoObject) -> bool:
 Input: List of len 2, each a Dict generic item format 
 Output: Bool result of insert call 
 """
-def insert_generic_item_update(generic_item_update: MongoObject) -> bool:
+def insert_generic_item_update(generic_item_update: MongoObject):
     result = user_updated_generic_item_set.insert_one(generic_item_update)
     return result 
