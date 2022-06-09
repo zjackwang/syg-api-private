@@ -28,13 +28,13 @@ def stop_local_api(api: subprocess.Popen):
 ## Secured requests w/ hmac sig
 ##
 def make_keyed_post_request(payload, url, timeout=5.0) -> requests.Response:
-    hmac_sig = str(generate_hmac_signature(payload, secret_key))
-
+    hmac_msg = "We were living to run, and running to live"
+    hmac_sig = generate_hmac_signature(hmac_msg, secret_key).hex()
     try:
         response = requests.post(
             url,
             json=payload,
-            headers={"X-HMAC-Signature": hmac_sig, "X-Is-Test-Request": 'True'},
+            headers={"X-Hmac-Signature": hmac_sig, "X-Hmac-Message": hmac_msg, "X-Is-Test-Request": 'True'},
             timeout=timeout
         )
     except Timeout:
@@ -45,13 +45,14 @@ def make_keyed_post_request(payload, url, timeout=5.0) -> requests.Response:
 ## Meant to fail requests
 def make_incorrect_key_post_request(payload, url, timeout=5.0) -> requests.Response:
     incorrect_secret_key = "thisisnothecorrectsecretkey"
-    hmac_sig = str(generate_hmac_signature(payload, incorrect_secret_key))
+    hmac_msg = "Til there was nothing left to burn, and nothing left to prove"
+    hmac_sig = generate_hmac_signature(hmac_msg, incorrect_secret_key).hex()
 
     try:
         response = requests.post(
             url,
             json=payload,
-            headers={"X-HMAC-Signature": hmac_sig, "X-Is-Test-Request": 'True'},
+            headers={"X-Hmac-Signature": hmac_sig, "X-Hmac-Message": hmac_msg, "X-Is-Test-Request": 'True'},
             timeout=timeout
         )
     except Timeout:
@@ -61,13 +62,14 @@ def make_incorrect_key_post_request(payload, url, timeout=5.0) -> requests.Respo
 
 def make_timedout_post_request(payload, url) -> requests.Response:
     miniscule_timeout = 0.0000001
-    hmac_sig = str(generate_hmac_signature(payload, secret_key))
+    hmac_msg = "You can feel the eyes upon you, as you shake off the cold..."
+    hmac_sig = generate_hmac_signature(hmac_msg, secret_key).hex()
 
     try:
         response = requests.post(
             url,
             json=payload,
-            headers={"X-HMAC-Signature": hmac_sig, "X-Is-Test-Request": 'True'},
+            headers={"X-Hmac-Signature": hmac_sig, "X-Hmac-Message": hmac_msg, "X-Is-Test-Request": 'True'},
             timeout=miniscule_timeout
         )
     except Timeout:

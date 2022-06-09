@@ -12,7 +12,7 @@ if __name__ == "__main__":
 
     if args.type == "mongo":
         run_mongo_tests()
-    elif args.type == "api": 
+    elif args.type == "http": 
         if args.loc == "local":
             run_local_api_tests()
         else:

@@ -1,13 +1,11 @@
-from email import message
 from flask import Flask, request
 from flask_restful import abort, Api, Resource
 
 import hmac
 import hashlib
-import json 
 
 from data import insert_generic_item, insert_matched_item, insert_generic_item_update
-
+from security.hmac_sig_gen import generate_hmac_signature
 from config import secret_key
 
 app = Flask(__name__)
@@ -30,15 +28,13 @@ def abort_invalid_hmac_signature():
 ##
 
 
-def validate_headers(rec_json):
+def validate_headers():
     headers = request.headers
 
     ## Validate hmac signature. Must use stored secret key
     received_hmac_sig = headers["X-Hmac-Signature"]
-
-    str_json = json.dumps(rec_json)
-    hmc = hmac.new(key=secret_key.encode(), msg=str_json.encode(), digestmod=hashlib.sha256)
-    generated_hmac_sig = str(hmc.digest())
+    received_hmac_message = headers["X-Hmac-Message"]
+    generated_hmac_sig = generate_hmac_signature(received_hmac_message, secret_key).hex()
     # print(f"GENERATED HMAC: {generated_hmac_sig}")
 
     if not hmac.compare_digest(received_hmac_sig, generated_hmac_sig):
@@ -90,7 +86,7 @@ def is_test_request():
 class UserSubmittedGenericItemSet(Resource):
     def post(self):
         rec_json = request.get_json()
-        validate_headers(rec_json)
+        validate_headers()
 
         validate_generic_item_json(rec_json) 
 
@@ -102,7 +98,7 @@ class UserSubmittedGenericItemSet(Resource):
 class UserSubmittedMatchedItemSet(Resource):
     def post(self):
         rec_json = request.get_json()
-        validate_headers(rec_json)
+        validate_headers()
 
         validate_matched_item_json(rec_json) 
 
@@ -114,7 +110,7 @@ class UserSubmittedMatchedItemSet(Resource):
 class UserUpdatedGenericItemSet(Resource):
     def post(self):
         rec_json = request.get_json()
-        validate_headers(rec_json)
+        validate_headers()
 
         validate_updated_generic_item_json(rec_json) 
 
