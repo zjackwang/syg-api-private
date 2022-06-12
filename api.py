@@ -2,7 +2,6 @@ from flask import Flask, request
 from flask_restful import abort, Api, Resource
 
 import hmac
-import hashlib
 
 from data import insert_generic_item, insert_matched_item, insert_generic_item_update
 from security.hmac_sig_gen import generate_hmac_signature
@@ -35,12 +34,11 @@ def validate_headers():
     received_hmac_sig = headers["X-Hmac-Signature"]
     received_hmac_message = headers["X-Hmac-Message"]
     generated_hmac_sig = generate_hmac_signature(received_hmac_message, secret_key).hex()
-    # print(f"GENERATED HMAC: {generated_hmac_sig}")
 
     if not hmac.compare_digest(received_hmac_sig, generated_hmac_sig):
         abort_invalid_hmac_signature()
 
-GENERIC_ITEM_KEYS_AND_TYPES = {'Name': str, 'Category': str, 'Subcategory': str, 'IsCut': bool, 'DaysInFridge': float, 'DaysOnShelf': float, 'DaysInFreezer': float, 'Notes': str, 'Links': str}
+GENERIC_ITEM_KEYS_AND_TYPES = {'Name': str, 'Category': str, 'Subcategory': str, 'IsCut': bool, 'IsCooked': bool, 'IsOpened': bool, 'DaysInFridge': float, 'DaysOnShelf': float, 'DaysInFreezer': float, 'Notes': str, 'Links': str}
 
 MATCHED_ITEM_KEYS_AND_TYPES = {'ScannedItemName': str, 'GenericItemName': str}
 
@@ -48,7 +46,7 @@ UPDATE_GENERIC_ITEM_KEYS_AND_TYPES = {'Original': dict, 'Updated': dict}
 
 def validate_generic_item_json(rec_json):
     keys_to_validate = set(rec_json.keys())
-    if len(set(GENERIC_ITEM_KEYS_AND_TYPES.keys()).difference(keys_to_validate)) > 0 :
+    if len(set(GENERIC_ITEM_KEYS_AND_TYPES.keys()).difference(keys_to_validate)) > 2 :
         abort_invalid_json()
     
     for k in keys_to_validate:
@@ -71,6 +69,7 @@ def validate_updated_generic_item_json(rec_json):
     for k in keys_to_validate:
         if type(rec_json[k]) != UPDATE_GENERIC_ITEM_KEYS_AND_TYPES[k]:
             abort_invalid_json()
+        
         validate_generic_item_json(rec_json[k])
 
 def is_test_request():
