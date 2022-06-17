@@ -1,11 +1,16 @@
-from bson import ObjectId
 from flask import Flask, request
 from flask_restful import abort, Api, Resource
 
 import hmac
 
-from data import insert_generic_item, insert_matched_item, insert_generic_item_update
+from data import (
+    insert_generic_item, 
+    insert_matched_item, 
+    insert_generic_item_update,
+    fetch_generic_item_id
+)
 from security.hmac_sig_gen import generate_hmac_signature
+
 from config import secret_key
 
 app = Flask(__name__)
@@ -41,7 +46,7 @@ def validate_headers():
 
 GENERIC_ITEM_KEYS_AND_TYPES = {'Name': str, 'Category': str, 'Subcategory': str, 'IsCut': bool, 'IsCooked': bool, 'IsOpened': bool, 'DaysInFridge': float, 'DaysOnShelf': float, 'DaysInFreezer': float, 'Notes': str, 'Links': str}
 
-MATCHED_ITEM_KEYS_AND_TYPES = {'ScannedItemName': str, 'GenericItemID': str}
+MATCHED_ITEM_KEYS_AND_TYPES = {'ScannedItemName': str, 'GenericItemObj': dict}
 
 UPDATE_GENERIC_ITEM_KEYS_AND_TYPES = {'Original': dict, 'Updated': dict}
 
@@ -62,6 +67,10 @@ def validate_matched_item_json(rec_json):
     for k in keys_to_validate:
         if type(rec_json[k]) != MATCHED_ITEM_KEYS_AND_TYPES[k]:
             abort_invalid_json()
+        
+        if type(rec_json[k]) == dict: 
+            validate_generic_item_json(rec_json[k])
+
 
 def validate_updated_generic_item_json(rec_json):
     keys_to_validate = set(rec_json.keys())
@@ -102,10 +111,17 @@ class UserSubmittedMatchedItemSet(Resource):
 
         validate_matched_item_json(rec_json) 
 
+        _id = fetch_generic_item_id(rec_json['GenericItemObj'])
+        payload = {
+            'ScannedItemName': rec_json['ScannedItemName'],
+            'GenericItemID': _id
+        }
+
         if is_test_request():
             return "success"
-        
-        insert_matched_item(rec_json) 
+
+
+        insert_matched_item(payload) 
 
 class UserUpdatedGenericItemSet(Resource):
     def post(self):

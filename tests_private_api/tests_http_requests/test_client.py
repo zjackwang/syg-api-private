@@ -4,7 +4,6 @@ Fires off http requests to private api and tests return code
 """
 
 from time import sleep
-from bson import ObjectId
 import requests
 from requests.exceptions import Timeout
 import unittest
@@ -127,11 +126,19 @@ class PrivateLocalAPITests(unittest.TestCase):
         )
 
     def test_user_submitted_matched_item_post(self):
-        id = '628d64c905a1b9a16ef267ae'
-
         payload = {
             'ScannedItemName': 'Not Random',
-            'GenericItemID': id,
+            'GenericItemObj': {
+                'Name': 'Apple',
+                'Category': 'Produce',
+                'Subcategory': 'Fresh',
+                'IsCut': False, 
+                'DaysInFridge': 30.0,
+                'DaysOnShelf': 10.0,
+                'DaysInFreezer': 240.0,
+                'Notes': '',
+                'Links': 'https://www.healthline.com/nutrition/how-long-do-apples-last#shelf-life'
+            },
         }
         
         try: 
@@ -219,11 +226,19 @@ class PrivateLocalAPITests(unittest.TestCase):
         )
     
     def test_invalid_hmac_user_submitted_matched_item(self):
-        id = '628d64c905a1b9a16ef267ae'
-
         payload = {
             'ScannedItemName': 'Not Random',
-            'GenericItemID': id,
+            'GenericItemObj': {
+                'Name': 'Apple',
+                'Category': 'Produce',
+                'Subcategory': 'Fresh',
+                'IsCut': False, 
+                'DaysInFridge': 30.0,
+                'DaysOnShelf': 10.0,
+                'DaysInFreezer': 240.0,
+                'Notes': '',
+                'Links': 'https://www.healthline.com/nutrition/how-long-do-apples-last#shelf-life'
+            },
         }
 
         url = USER_SUBMITTED_MATCHED_ITEM_LOCAL

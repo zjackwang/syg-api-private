@@ -1,8 +1,6 @@
-from nis import match
-from xmlrpc.client import Boolean
 from pymongo import MongoClient
 
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 from config import mongo_key
 
@@ -28,9 +26,11 @@ MongoObject = Dict[str, Any]
 ## Collection References
 ##
 
+
 user_submitted_generic_item_set = syg_data["UserSubmittedGenericItemSet"]
 user_submitted_matched_item_dict = syg_data["UserSubmittedMatchedItemDict"]
 user_updated_generic_item_set = syg_data["UserUpdatedGenericItemSet"]
+generic_item_set = syg_data["GenericItemSet"]
 
 
 ## User Submitted Generic Item Set
@@ -64,3 +64,9 @@ Output: Bool result of insert call
 def insert_generic_item_update(generic_item_update: MongoObject):
     result = user_updated_generic_item_set.insert_one(generic_item_update)
     return result 
+
+
+## Generic Item Set 
+def fetch_generic_item_id(generic_item):
+    returned_items = generic_item_set.find_one(generic_item)
+    return returned_items["_id"]

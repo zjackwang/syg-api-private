@@ -1,6 +1,5 @@
 import hmac
 import hashlib
-import json 
 
 def generate_hmac_signature(message, key):
     hmc = hmac.new(key=key.encode(), msg=message.encode(), digestmod=hashlib.sha256)
