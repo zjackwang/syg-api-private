@@ -57,6 +57,8 @@ def validate_generic_item_json(rec_json):
     
     for k in keys_to_validate:
         if type(rec_json[k]) != GENERIC_ITEM_KEYS_AND_TYPES[k]:
+            if type(rec_json[k]) == int and GENERIC_ITEM_KEYS_AND_TYPES[k] == float: 
+                continue 
             abort_invalid_json()
 
 def validate_matched_item_json(rec_json):
