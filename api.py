@@ -1,3 +1,4 @@
+from bson import ObjectId
 from flask import Flask, request
 from flask_restful import abort, Api, Resource
 
@@ -40,7 +41,7 @@ def validate_headers():
 
 GENERIC_ITEM_KEYS_AND_TYPES = {'Name': str, 'Category': str, 'Subcategory': str, 'IsCut': bool, 'IsCooked': bool, 'IsOpened': bool, 'DaysInFridge': float, 'DaysOnShelf': float, 'DaysInFreezer': float, 'Notes': str, 'Links': str}
 
-MATCHED_ITEM_KEYS_AND_TYPES = {'ScannedItemName': str, 'GenericItemName': str}
+MATCHED_ITEM_KEYS_AND_TYPES = {'ScannedItemName': str, 'GenericItemID': str}
 
 UPDATE_GENERIC_ITEM_KEYS_AND_TYPES = {'Original': dict, 'Updated': dict}
 
