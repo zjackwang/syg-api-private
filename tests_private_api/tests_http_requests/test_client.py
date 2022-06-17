@@ -482,12 +482,21 @@ class PrivateRemoteAPITests(unittest.TestCase):
         )
 
     def test_user_submitted_matched_item_post(self):
-        id = '628d64c905a1b9a16ef267ae'
-
         payload = {
             'ScannedItemName': 'Not Random',
-            'GenericItemID': id,
+            'GenericItemObj': {
+                'Name': 'Apple',
+                'Category': 'Produce',
+                'Subcategory': 'Fresh',
+                'IsCut': False, 
+                'DaysInFridge': 30.0,
+                'DaysOnShelf': 10.0,
+                'DaysInFreezer': 240.0,
+                'Notes': '',
+                'Links': 'https://www.healthline.com/nutrition/how-long-do-apples-last#shelf-life'
+            },
         }
+
         try:
             response = make_keyed_post_request(payload, USER_SUBMITTED_MATCHED_ITEM_REMOTE)
         except Timeout: 
@@ -574,11 +583,19 @@ class PrivateRemoteAPITests(unittest.TestCase):
         )
     
     def test_invalid_hmac_user_submitted_matched_item(self):
-        id = '628d64c905a1b9a16ef267ae'
-
         payload = {
             'ScannedItemName': 'Not Random',
-            'GenericItemID': id,
+            'GenericItemObj': {
+                'Name': 'Apple',
+                'Category': 'Produce',
+                'Subcategory': 'Fresh',
+                'IsCut': False, 
+                'DaysInFridge': 30.0,
+                'DaysOnShelf': 10.0,
+                'DaysInFreezer': 240.0,
+                'Notes': '',
+                'Links': 'https://www.healthline.com/nutrition/how-long-do-apples-last#shelf-life'
+            },
         }
 
         url = USER_SUBMITTED_MATCHED_ITEM_REMOTE

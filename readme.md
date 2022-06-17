@@ -15,7 +15,7 @@ POST
 - Matched item is 
 {
     "scannedItemName": Str,
-    "genericItemName": Str 
+    "genericItemObj": GenericItem 
 }
 #### /userupdatedgenericitemset
 POST 
