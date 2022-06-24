@@ -52,7 +52,7 @@ UPDATE_GENERIC_ITEM_KEYS_AND_TYPES = {'Original': dict, 'Updated': dict}
 
 def validate_generic_item_json(rec_json):
     keys_to_validate = set(rec_json.keys())
-    if len(set(GENERIC_ITEM_KEYS_AND_TYPES.keys()).difference(keys_to_validate)) > 2 :
+    if len(set(GENERIC_ITEM_KEYS_AND_TYPES.keys()).difference(keys_to_validate)) > 3 :
         abort_invalid_json()
     
     for k in keys_to_validate:
@@ -114,6 +114,9 @@ class UserSubmittedMatchedItemSet(Resource):
         validate_matched_item_json(rec_json) 
 
         _id = fetch_generic_item_id(rec_json['GenericItemObj'])
+        if _id == None: 
+            abort(404, message="Could not find the Generic Item")
+
         payload = {
             'ScannedItemName': rec_json['ScannedItemName'],
             'GenericItemID': _id
@@ -121,7 +124,6 @@ class UserSubmittedMatchedItemSet(Resource):
 
         if is_test_request():
             return "success"
-
 
         insert_matched_item(payload) 
 

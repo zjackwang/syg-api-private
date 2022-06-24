@@ -69,4 +69,6 @@ def insert_generic_item_update(generic_item_update: MongoObject):
 ## Generic Item Set 
 def fetch_generic_item_id(generic_item):
     returned_items = generic_item_set.find_one(generic_item)
+    if returned_items == None:
+        return None 
     return returned_items["_id"]
