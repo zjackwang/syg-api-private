@@ -99,7 +99,7 @@ class UserSubmittedGenericItemSet(Resource):
         rec_json = request.get_json()
         validate_headers()
 
-        validate_generic_item_json(rec_json) 
+        # validate_generic_item_json(rec_json) 
 
         if is_test_request():
             return "success"
@@ -111,7 +111,7 @@ class UserSubmittedMatchedItemSet(Resource):
         rec_json = request.get_json()
         validate_headers()
 
-        validate_matched_item_json(rec_json) 
+        # validate_matched_item_json(rec_json) 
 
         _id = fetch_generic_item_id(rec_json['GenericItemObj'])
         if _id == None: 
@@ -132,7 +132,7 @@ class UserUpdatedGenericItemSet(Resource):
         rec_json = request.get_json()
         validate_headers()
 
-        validate_updated_generic_item_json(rec_json) 
+        # validate_updated_generic_item_json(rec_json) 
 
         if is_test_request():
             return "success"
